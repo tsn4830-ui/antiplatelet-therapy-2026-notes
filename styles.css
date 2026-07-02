@@ -541,6 +541,59 @@ figcaption {
   line-height: 1.62;
 }
 
+.risk-tools {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.tool-list {
+  display: grid;
+  gap: 9px;
+}
+
+.tool-link {
+  display: block;
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  border-radius: 8px;
+  background: rgba(230, 243, 239, 0.72);
+  padding: 11px 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.tool-link:hover,
+.tool-link:focus-visible {
+  border-color: var(--teal);
+  background: #fff;
+  outline: none;
+}
+
+.tool-link span,
+.tool-link small {
+  display: block;
+}
+
+.tool-link span {
+  margin-bottom: 4px;
+  color: var(--teal);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.tool-link small {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+.tool-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .controls {
   position: fixed;
   left: 0;
@@ -650,6 +703,24 @@ dialog::backdrop {
     padding: 14px;
   }
 
+  .top-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    max-width: 362px;
+  }
+
+  .top-actions .download-button {
+    grid-column: 1 / -1;
+  }
+
+  .top-actions .ghost-button,
+  .top-actions .download-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
   h1 {
     font-size: 20px;
   }
@@ -752,6 +823,10 @@ dialog::backdrop {
 
   .notes-panel {
     margin-top: 12px;
+  }
+
+  .risk-tools {
+    scroll-margin-top: 12px;
   }
 
   .controls {

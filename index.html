@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="central_illustration_clinical_scenarios.png">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="styles.css?v=14">
+    <link rel="stylesheet" href="styles.css?v=16">
   </head>
   <body>
     <header class="topbar">
@@ -20,6 +20,7 @@
       </div>
       <nav class="top-actions" aria-label="網站操作">
         <a class="download-button" href="antiplatelet-therapy-2026-slides.pptx" download>下載 PowerPoint 投影片</a>
+        <a class="ghost-button" href="#riskTools">線上計算工具</a>
         <a class="ghost-button" href="source.pdf" target="_blank" rel="noreferrer">原文 PDF</a>
         <button class="ghost-button" id="scriptToggle" type="button">全文講稿</button>
       </nav>
@@ -304,6 +305,28 @@
       <aside class="notes-panel">
         <div class="notes-title">本張解說</div>
         <div id="notesText"></div>
+        <section class="risk-tools" id="riskTools" aria-labelledby="riskToolsTitle">
+          <div class="notes-title" id="riskToolsTitle">線上風險評估工具</div>
+          <div class="tool-list">
+            <a class="tool-link" href="https://tools.acc.org/daptriskapp/#!/content/calculator/" target="_blank" rel="noreferrer">
+              <span>DAPT Score</span>
+              <small>PCI 後延長 DAPT 的缺血效益與出血風險</small>
+            </a>
+            <a class="tool-link" href="https://www.google.com/search?q=PRECISE-DAPT+score+calculator" target="_blank" rel="noreferrer">
+              <span>PRECISE-DAPT</span>
+              <small>搜尋可用計算器；評估 DAPT 期間出血風險與療程長短</small>
+            </a>
+            <a class="tool-link" href="https://www.google.com/search?q=ARC-HBR+criteria+calculator" target="_blank" rel="noreferrer">
+              <span>ARC-HBR Criteria</span>
+              <small>搜尋 criteria 與可用工具；辨識 PCI 後高出血風險族群</small>
+            </a>
+            <a class="tool-link" href="https://tools.acc.org/ascvd-risk-estimator-plus/" target="_blank" rel="noreferrer">
+              <span>ASCVD Risk Estimator Plus</span>
+              <small>10 年 ASCVD 風險與初級預防討論</small>
+            </a>
+          </div>
+          <p class="tool-note">風險工具僅作輔助，仍需合併病史、出血事件、腎功能、手術需求與病人偏好判斷。</p>
+        </section>
       </aside>
     </main>
 
@@ -321,6 +344,6 @@
       <div id="fullScript" class="script-body"></div>
     </dialog>
 
-    <script src="script.js?v=14"></script>
+    <script src="script.js?v=16"></script>
   </body>
 </html>
