@@ -69,12 +69,14 @@ h1 {
 }
 
 button,
-a.ghost-button {
+a.ghost-button,
+a.download-button {
   font: inherit;
 }
 
 .ghost-button,
-.nav-button {
+.nav-button,
+.download-button {
   border: 1px solid var(--line);
   background: #fff;
   color: var(--ink);
@@ -84,10 +86,23 @@ a.ghost-button {
   cursor: pointer;
 }
 
+.download-button {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.18);
+}
+
 .ghost-button:hover,
 .nav-button:hover,
-.thumb:hover {
+.thumb:hover,
+.download-button:hover {
   border-color: var(--teal);
+}
+
+.download-button:hover {
+  background: #0b5f59;
 }
 
 .deck-shell {
