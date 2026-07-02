@@ -67,4 +67,5 @@ scriptToggle.addEventListener("click", () => {
 });
 
 closeScript.addEventListener("click", () => dialog.close());
-setSlide(0);
+const initialSlide = Number(new URLSearchParams(window.location.search).get("slide"));
+setSlide(Number.isFinite(initialSlide) && initialSlide > 0 ? initialSlide - 1 : 0);
