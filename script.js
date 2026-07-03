@@ -18,20 +18,18 @@ const sourceSearchStatus = document.getElementById("sourceSearchStatus");
 const sourceSearchResults = document.getElementById("sourceSearchResults");
 
 const notes = [
-  "這份讀書筆記整理 2026 ACC Scientific Statement。主軸是 ASCVD 抗血小板治療的情境化決策：同一個藥物組合，在不同時間點與不同風險輪廓下，可能從有益變成有害。",
-  "先建立判斷框架。抗血小板治療永遠是在缺血風險與出血風險之間取得平衡。風險工具可以幫忙，但文件提醒我們，最後仍要回到病人的整體臨床脈絡。",
-  "這張是原文 Figure 1。它把 aspirin、P2Y12 抑制劑、GPIIb/IIIa 抑制劑與 vorapaxar 放回血小板活化路徑中，適合用來記住藥物作用位置。",
-  "這張 Central Illustration 是整篇最適合臨床快速回顧的圖。它把 primary prevention、ACS、CCD、PAD、stroke/TIA 放在同一條治療強度軸上。",
-  "初級預防的 aspirin 角色已經很窄。可考慮的族群是 40-70 歲、高心血管風險、低出血風險；超過 70 歲不建議常規使用。",
-  "PCI 後的預設仍是重要基準：CCD 通常 6 個月 DAPT，ACS 通常 12 個月 DAPT。ACS 接受 PCI 時，prasugrel 或 ticagrelor 通常優先於 clopidogrel。",
-  "縮短 DAPT 或從較強 P2Y12 抑制劑降階到 clopidogrel，是降低出血的策略，但要避開高缺血風險或 STEMI 等較不適合過早降強度的情境。",
-  "一年後的長期策略越來越個別化。Clopidogrel 單用相較 aspirin 單用有新興資料支持；但延長 DAPT 或加入低劑量 rivaroxaban 都必須嚴格挑選病人。",
-  "PAD 的重點是介入後短期較強、長期依風險回歸。症狀性 PAD 要有長期單一抗血小板治療；高風險且出血可接受時，可考慮 aspirin 加低劑量 rivaroxaban。",
-  "輕微缺血性中風或高風險 TIA 的 DAPT 是短程治療。重點是早期啟動、21 天後降為單一抗血小板，避免長期 DAPT 造成出血。",
-  "病人同時需要抗凝時，抗血栓治療要盡量簡化。Triple therapy 不是長期方案，通常 aspirin 早期停掉，留下 DOAC 加 clopidogrel，再視情況回到 DOAC 單用。",
-  "手術前後管理先看 PCI 後多久。文件引用 2024 AHA/ACC perioperative guideline：CCS PCI 後 elective surgery 盡量延後 6 個月，ACS PCI 後延後 12 個月。",
-  "治療追蹤包括副作用、出血、服藥規則性、藥物交互作用與 PPI。早期 DAPT 不規則服藥，尤其是 PCI 後，和支架栓塞與 MACE 上升相關。",
-  "最後把這篇收成五個臨床句子：aspirin 初級預防縮窄、DAPT 有預設期間但可調整、出血高時考慮縮短或降階、一年後策略更個別化、治療要持續重評估。"
+  "這份網站版同步成 12 張學術簡報風投影片。整體主軸是：ASCVD 的抗血小板治療不是固定答案，而是在不同臨床情境與時間點，重新平衡缺血風險與出血風險。",
+  "這張先建立判斷框架。近期 ACS、PCI、STEMI、複雜病灶與 PAD 會把缺血風險拉高；高齡、貧血、CKD、既往出血、抗凝與手術需求則會把出血風險放大。",
+  "這張保留原文 Figure 1。讀圖時重點不是背所有 receptor，而是把 aspirin、P2Y12 抑制劑、GPIIb/IIIa 抑制劑放回血小板活化路徑，理解各自壓住哪個環節。",
+  "Central Illustration 是整篇 statement 最適合快速回顧的圖。它提醒我們，primary prevention、ACS、CCD、PAD、stroke/TIA 的治療強度與期間，取決於情境與時間軸。",
+  "初級預防的 aspirin 角色已經很窄。可考慮的是 40-70 歲、心血管風險較高、出血風險低的族群；超過 70 歲或高出血風險時，常規使用通常不划算。",
+  "PCI 後先記住基準：CCD 加 PCI 通常是 aspirin 加 clopidogrel 6 個月；ACS 加 PCI 通常是 aspirin 加 P2Y12 抑制劑 12 個月，再依缺血與出血風險調整。",
+  "縮短 DAPT 或降階並不是少做，而是明確用來降低出血。短 DAPT 後 P2Y12 單用、或 ACS 後從較強 P2Y12 抑制劑轉 clopidogrel，都需要先確認病人不是高缺血風險。",
+  "一年後的次級預防越來越個別化。Clopidogrel 單用、延長 DAPT、或 aspirin 加低劑量 rivaroxaban 都可能是選項，但前提是病人的缺血效益足以抵過出血代價。",
+  "PAD 的整理重點是短期介入後可較強，長期則回到風險分層。血管內介入後可 DAPT 1-6 個月；症狀性 PAD 長期至少要有單一抗血小板治療。",
+  "輕微缺血性中風或高風險 TIA 的 DAPT 是短程策略。可在 12-24 小時內開始 aspirin 加 clopidogrel，通常 21 天後轉為單一抗血小板，避免長期 DAPT。",
+  "同時需要抗凝或面臨手術時，出血風險會主導決策。Triple therapy 應縮到最短；非心臟手術前則先看 PCI 後多久，以及 P2Y12 抑制劑需要停幾天。",
+  "最後收成四步驟：先定情境，再定時間軸，接著用風險工具輔助判斷，最後定期重新評估。這也是這篇 statement 最實用的臨床閱讀方式。"
 ];
 
 let index = 0;
