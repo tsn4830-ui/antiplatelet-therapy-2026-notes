@@ -9,6 +9,13 @@ const dialog = document.getElementById("scriptDialog");
 const scriptToggle = document.getElementById("scriptToggle");
 const closeScript = document.getElementById("closeScript");
 const fullScript = document.getElementById("fullScript");
+const sourceSearchToggle = document.getElementById("sourceSearchToggle");
+const sourceSearchDialog = document.getElementById("sourceSearchDialog");
+const closeSourceSearch = document.getElementById("closeSourceSearch");
+const sourceSearchForm = document.getElementById("sourceSearchForm");
+const sourceSearchInput = document.getElementById("sourceSearchInput");
+const sourceSearchStatus = document.getElementById("sourceSearchStatus");
+const sourceSearchResults = document.getElementById("sourceSearchResults");
 
 const notes = [
   "這份讀書筆記整理 2026 ACC Scientific Statement。主軸是 ASCVD 抗血小板治療的情境化決策：同一個藥物組合，在不同時間點與不同風險輪廓下，可能從有益變成有害。",
@@ -67,5 +74,166 @@ scriptToggle.addEventListener("click", () => {
 });
 
 closeScript.addEventListener("click", () => dialog.close());
+
+let sourcePagesPromise;
+let sourcePages = [];
+
+const stopWords = new Set([
+  "the", "and", "for", "with", "after", "before", "from", "that", "this", "what",
+  "when", "where", "which", "should", "about", "patient", "patients", "therapy",
+  "treatment", "多久", "如何", "什麼", "是否", "可以", "需要", "使用", "治療"
+]);
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function normalizeText(value) {
+  return value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s/-]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function queryTerms(query) {
+  return normalizeText(query)
+    .split(" ")
+    .map((term) => term.trim())
+    .filter((term) => term.length > 1 && !stopWords.has(term));
+}
+
+async function loadSourcePages() {
+  if (sourcePages.length) return sourcePages;
+  if (!sourcePagesPromise) {
+    sourceSearchStatus.textContent = "正在讀取原文 PDF，第一次搜尋需要幾秒鐘。";
+    sourcePagesPromise = import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs")
+      .then(async (pdfjsLib) => {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+        const pdf = await pdfjsLib.getDocument("source.pdf").promise;
+        const pages = [];
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+          const page = await pdf.getPage(pageNumber);
+          const content = await page.getTextContent();
+          const text = content.items
+            .map((item) => item.str)
+            .join(" ")
+            .replace(/\s+/g, " ")
+            .trim();
+          pages.push({ page: pageNumber, text, normalized: normalizeText(text) });
+        }
+        sourcePages = pages;
+        return pages;
+      });
+  }
+  return sourcePagesPromise;
+}
+
+function countMatches(text, term) {
+  if (!term) return 0;
+  let count = 0;
+  let start = 0;
+  while (true) {
+    const indexAt = text.indexOf(term, start);
+    if (indexAt === -1) break;
+    count += 1;
+    start = indexAt + term.length;
+  }
+  return count;
+}
+
+function makeSnippet(pageText, terms, query) {
+  const lowerText = pageText.toLowerCase();
+  const phrase = query.trim().toLowerCase();
+  let hitAt = phrase.length > 2 ? lowerText.indexOf(phrase) : -1;
+  if (hitAt === -1) {
+    hitAt = terms
+      .map((term) => lowerText.indexOf(term.toLowerCase()))
+      .filter((position) => position >= 0)
+      .sort((a, b) => a - b)[0];
+  }
+  const center = hitAt >= 0 ? hitAt : 0;
+  const start = Math.max(0, center - 120);
+  const end = Math.min(pageText.length, center + 260);
+  let snippet = `${start > 0 ? "..." : ""}${pageText.slice(start, end)}${end < pageText.length ? "..." : ""}`;
+  terms.slice(0, 8).forEach((term) => {
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    snippet = snippet.replace(new RegExp(`(${escapedTerm})`, "gi"), "\u0000$1\u0001");
+  });
+  return escapeHtml(snippet)
+    .replace(/\u0000/g, "<mark>")
+    .replace(/\u0001/g, "</mark>");
+}
+
+function searchSource(query) {
+  const normalizedQuery = normalizeText(query);
+  const terms = queryTerms(query);
+  if (!normalizedQuery || !terms.length) return [];
+
+  return sourcePages
+    .map((page) => {
+      const phraseScore = countMatches(page.normalized, normalizedQuery) * 12;
+      const termScore = terms.reduce((sum, term) => sum + countMatches(page.normalized, term), 0);
+      const coverageScore = terms.filter((term) => page.normalized.includes(term)).length * 4;
+      return {
+        page: page.page,
+        text: page.text,
+        score: phraseScore + termScore + coverageScore
+      };
+    })
+    .filter((result) => result.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8)
+    .map((result) => ({
+      ...result,
+      snippet: makeSnippet(result.text, terms, query)
+    }));
+}
+
+function renderSourceResults(results, query) {
+  if (!results.length) {
+    sourceSearchResults.innerHTML = `<div class="empty-result">找不到明確符合「${escapeHtml(query)}」的段落。可以改用英文關鍵字，例如 DAPT、bleeding、PCI、clopidogrel、rivaroxaban。</div>`;
+    return;
+  }
+  sourceSearchResults.innerHTML = results.map((result) => `
+    <article class="source-result">
+      <a href="source.pdf#page=${result.page}" target="_blank" rel="noreferrer">原文第 ${result.page} 頁</a>
+      <p>${result.snippet}</p>
+    </article>
+  `).join("");
+}
+
+sourceSearchToggle.addEventListener("click", () => {
+  sourceSearchDialog.showModal();
+  setTimeout(() => sourceSearchInput.focus(), 0);
+});
+
+closeSourceSearch.addEventListener("click", () => sourceSearchDialog.close());
+
+sourceSearchForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const query = sourceSearchInput.value.trim();
+  if (!query) {
+    sourceSearchInput.focus();
+    return;
+  }
+  sourceSearchResults.innerHTML = "";
+  try {
+    await loadSourcePages();
+    const results = searchSource(query);
+    sourceSearchStatus.textContent = `已搜尋原文 ${sourcePages.length} 頁。結果以頁碼與原文片段呈現。`;
+    renderSourceResults(results, query);
+  } catch (error) {
+    sourceSearchStatus.textContent = "目前無法讀取 PDF。請確認網路可連線，或直接開啟原文 PDF 使用瀏覽器搜尋。";
+    sourceSearchResults.innerHTML = `<div class="empty-result">PDF 搜尋載入失敗：${escapeHtml(error.message || "unknown error")}</div>`;
+  }
+});
+
 const initialSlide = Number(new URLSearchParams(window.location.search).get("slide"));
 setSlide(Number.isFinite(initialSlide) && initialSlide > 0 ? initialSlide - 1 : 0);

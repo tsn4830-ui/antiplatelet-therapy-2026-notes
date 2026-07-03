@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="central_illustration_clinical_scenarios.png">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="styles.css?v=16">
+    <link rel="stylesheet" href="styles.css?v=17">
   </head>
   <body>
     <header class="topbar">
@@ -20,6 +20,7 @@
       </div>
       <nav class="top-actions" aria-label="網站操作">
         <a class="download-button" href="antiplatelet-therapy-2026-slides.pptx" download>下載 PowerPoint 投影片</a>
+        <button class="ghost-button" id="sourceSearchToggle" type="button">搜尋原文</button>
         <a class="ghost-button" href="#riskTools">線上計算工具</a>
         <a class="ghost-button" href="source.pdf" target="_blank" rel="noreferrer">原文 PDF</a>
         <button class="ghost-button" id="scriptToggle" type="button">全文講稿</button>
@@ -344,6 +345,24 @@
       <div id="fullScript" class="script-body"></div>
     </dialog>
 
-    <script src="script.js?v=16"></script>
+    <dialog id="sourceSearchDialog">
+      <div class="dialog-head">
+        <h2>搜尋原文全文</h2>
+        <button id="closeSourceSearch" type="button">關閉</button>
+      </div>
+      <div class="source-search-body">
+        <form class="source-search-form" id="sourceSearchForm">
+          <label for="sourceSearchInput">輸入問題或關鍵字</label>
+          <div class="source-search-row">
+            <input id="sourceSearchInput" type="search" placeholder="例如：ACS PCI 後 DAPT 多久？">
+            <button class="download-button" type="submit">搜尋</button>
+          </div>
+        </form>
+        <p class="search-hint" id="sourceSearchStatus">搜尋會在瀏覽器中讀取原文 PDF，不會上傳你的問題。</p>
+        <div class="source-search-results" id="sourceSearchResults"></div>
+      </div>
+    </dialog>
+
+    <script src="script.js?v=17"></script>
   </body>
 </html>

@@ -670,6 +670,95 @@ dialog::backdrop {
   line-height: 1.62;
 }
 
+.source-search-body {
+  padding: 18px;
+}
+
+.source-search-form {
+  display: grid;
+  gap: 10px;
+}
+
+.source-search-form label {
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.source-search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.source-search-row input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.source-search-row input:focus {
+  border-color: var(--teal);
+  outline: 2px solid rgba(15, 118, 110, 0.15);
+}
+
+.search-hint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.source-search-results {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.source-result {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 14px;
+}
+
+.source-result a {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--teal);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.source-result a:hover {
+  text-decoration: underline;
+}
+
+.source-result p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.source-result mark {
+  border-radius: 4px;
+  background: #fff2b8;
+  color: var(--ink);
+  padding: 0 2px;
+}
+
+.empty-result {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 @media (max-width: 1180px) {
   .deck-shell {
     grid-template-columns: 118px minmax(0, 1fr);
@@ -719,6 +808,10 @@ dialog::backdrop {
     display: block;
     width: 100%;
     text-align: center;
+  }
+
+  .source-search-row {
+    grid-template-columns: 1fr;
   }
 
   h1 {
